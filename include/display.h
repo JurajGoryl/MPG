@@ -1,0 +1,1 @@
+void OnDisplay(void);

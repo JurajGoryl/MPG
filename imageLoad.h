@@ -1,5 +1,6 @@
 #ifndef imageLoad_H
 #define imageLoad_H
+#include <cstring>
 #include <iostream>
 #include <fstream>
 #include <GL/glut.h>
