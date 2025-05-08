@@ -5,6 +5,8 @@
 #include "../include/utils.h"
 #include "../include/globals.h"
 
+#include <iostream>
+
 #include <cmath>
 #include <GL/glut.h>
 
@@ -127,6 +129,7 @@ void OnKeyboard(unsigned char key, int mx, int my) {
             break;
         }
     }
+
 
     if (CanMoveTo(newX, trany, newZ)) {
         tranx = newX;

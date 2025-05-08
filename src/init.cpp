@@ -1,3 +1,4 @@
+#include "../GL/glew.h"
 #include "../include/display.h"
 #include "../include/objects.h"
 #include "../include/init.h"
@@ -7,6 +8,7 @@
 #include "../imageLoad.h"
 #include <cmath>
 #include <GL/glut.h>
+
 
 void OnReshape(int w, int h)            
 {
@@ -18,53 +20,56 @@ void OnReshape(int w, int h)
 
 void OnInit(void)
 {
-	glFrontFace(GL_CW);					
-	glPolygonMode(GL_FRONT, GL_FILL);   
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
-     glEnable(GL_DEPTH_TEST);
-
-
-     GLfloat lightPos[] = {100.0f, 100.0f, 100.0f, 1.0f};
-     GLfloat lightColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-     GLfloat ambientLight[] = {0.3f, 0.3f, 0.3f, 1.0f};
-
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-    glEnable(GL_LIGHT0);
+    glFrontFace(GL_CW);					
+    glPolygonMode(GL_FRONT, GL_FILL);   
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_NORMALIZE); // Important for correct lighting!
     
-    // Enable color tracking for materials
-    glEnable(GL_COLOR_MATERIAL);
-    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-     
-     glEnable(GL_TEXTURE_2D);
 
-	if (!setTexture("textures/coble.bmp", &coble, true)) {
-		std::cout << "Neotvoril sa" << std::endl;
-		exit(1);
-	}
+    glEnable(GL_LIGHTING);
+    glEnable(GL_NORMALIZE);
+    glShadeModel(GL_SMOOTH);
 
-     if(!setTexture("textures/coble-wall.bmp", &cobleWall, true)) {
-          std::cout << "Neotvoril sa" << std::endl;
-          exit(1);
-     }
+    // Much brighter global ambient
+    GLfloat globalAmbient[] = {0.05f, 0.05f, 0.05f, 1.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
 
-	glBindTexture(GL_TEXTURE_2D, coble);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // Configure ALL light parameters in one place
+    GLfloat lampLightColor[] = {4.0f, 3.5f, 3.0f, 1.0f}; // Even brighter
+    
+    for (int i = 1; i <= 4; i++) {
+        glLightfv(GL_LIGHT0+i, GL_DIFFUSE, lampLightColor);
+        glLightfv(GL_LIGHT0+i, GL_SPECULAR, lampLightColor);
+        glLightf(GL_LIGHT0+i, GL_CONSTANT_ATTENUATION, 0.7f);
+        glLightf(GL_LIGHT0+i, GL_LINEAR_ATTENUATION, 0.003f);
+        glLightf(GL_LIGHT0+i, GL_QUADRATIC_ATTENUATION, 0.0002f);
+        glLightf(GL_LIGHT0+i, GL_SPOT_CUTOFF, 180.0f);
+    }
 
+    // Load textures
+    if (!setTexture("textures/pole.bmp", &streetLamp.textureID, true) ||
+        !setTexture("textures/coble.bmp", &coble, true) ||
+        !setTexture("textures/coble-wall.bmp", &cobleWall, true)) {
+        std::cerr << "Failed to load textures!" << std::endl;
+        exit(1);
+    }
 
-	glBindTexture(GL_TEXTURE_2D, cobleWall);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    GenerateWoodTexture();
 
-     InitCollisionWalls();
+    // Texture parameters
+    glBindTexture(GL_TEXTURE_2D, coble);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+    // Initialize objects
+    InitCollisionWalls();
+    LoadLampModel("models/lampa.obj");
+    SetupLampBuffers();
+
+    glutIdleFunc(OnIdle);
 
 }
 
@@ -103,3 +108,4 @@ void InitCollisionWalls() {
     
     playerRadius = 2.5f; // Player collision radius
 }
+
