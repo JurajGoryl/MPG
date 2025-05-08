@@ -37,6 +37,7 @@ void OnDisplay(void)
     DrawWallCollisionBounds();
     DrawBox();
 
+
     if (thrownObject.active) {
         glPushMatrix();
         glTranslatef(thrownObject.x, thrownObject.y, thrownObject.z);

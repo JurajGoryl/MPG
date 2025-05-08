@@ -6,10 +6,6 @@
 #include <GL/glut.h>
 
 bool CanMoveTo(float x, float y, float z) {
-    // Height limits first
-    if (y < GROUND_LEVEL || y > MAX_HEIGHT) {
-        return false;
-    }
 
     for (int i = 0; i < 4; i++) {
         Wall wall = Walls[i];
@@ -40,6 +36,7 @@ bool CanMoveTo(float x, float y, float z) {
             return false;
         }
     }
+
     return true;
 }
 

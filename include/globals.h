@@ -23,6 +23,7 @@ struct ThrownObject {
     bool falling;
 };
 
+
 extern ThrownObject thrownObject;
 
 struct Wall {
@@ -56,10 +57,6 @@ extern bool animationRunning;
 extern bool texturesEnabled;
 extern float lightBrightness;
 extern GLfloat lightColor[4];
-
-extern const float GROUND_LEVEL;
-extern const float MAX_HEIGHT;
-
 
 extern float animateAngle;
 extern float xnew, ynew;

@@ -8,6 +8,7 @@ GLuint coble;
 GLuint cobleWall;
 GLuint lampTexture;
 
+
 StreetLamp streetLamp;
 
 Wall Walls[4];
@@ -29,8 +30,6 @@ bool texturesEnabled = true;
 float lightBrightness = 0.85;
 GLfloat lightColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
 
-const float GROUND_LEVEL = -50.0f; 
-const float MAX_HEIGHT = 0.0f;
 
 float animateAngle;
 float xnew = 0, ynew = 0;

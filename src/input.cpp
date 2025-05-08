@@ -101,19 +101,7 @@ void OnSpecial(int key, int mx, int my) {
             newX += strafeX;
             newZ += strafeZ;
             break;
-        }
-        case GLUT_KEY_PAGE_UP: {
-        lastCommand = "Ascend";
-        newY += moveSpeed;
-        if (newY > MAX_HEIGHT) newY = MAX_HEIGHT; // Can't go above ground
-        break;
-        }
-    case GLUT_KEY_PAGE_DOWN:{
-        lastCommand = "Descend";
-        newY -= moveSpeed;
-        if (newY < GROUND_LEVEL) newY = GROUND_LEVEL; // Can't go below -30
-        break;
-    }
+        } 
     }
 
     if (CanMoveTo(newX, trany, newZ)) {
@@ -181,8 +169,6 @@ void OnKeyboard(unsigned char key, int mx, int my) {
             float dirZ = -cos(yaw) * cos(pitch);
         
             float speed = 1.0f;
-    
-
             thrownObject.x = -tranx;
             thrownObject.y = -trany;
             thrownObject.z = -tranz;

@@ -474,11 +474,12 @@ void Box() {
     glDisable(GL_TEXTURE_2D);
 }
 
+
 void DrawBox() {
     glPushMatrix();
-    glScalef(0.5,0.5,0.5);
-    glTranslatef(75, -15, -75);
-    Box();
+    glScalef(0.5f, 0.5f, 0.5f);
+    glTranslatef(75, -15, -75); 
+    Box(); // Your existing box rendering
     glPopMatrix();
 }
 

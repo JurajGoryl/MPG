@@ -9,4 +9,5 @@ void DrawBox();
 void GenerateWoodTexture();
 void DrawWindowObject();
 void OnIdle();
+void DrawBoxCollisionBounds();
 
