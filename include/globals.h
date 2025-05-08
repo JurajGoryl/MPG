@@ -16,6 +16,15 @@ struct StreetLamp {
     StreetLamp() : VAO(0), VBO{0, 0} {} // Constructor to initialize VAO and VBO
 };
 
+struct ThrownObject {
+    float x, y, z;
+    float vx, vy, vz;
+    bool active;
+    bool falling;
+};
+
+extern ThrownObject thrownObject;
+
 struct Wall {
     float normal[3];  // Wall normal vector
     float point[3];   // A point on the wall
@@ -24,6 +33,8 @@ struct Wall {
 };
 
 extern StreetLamp streetLamp;
+
+extern std::string lastCommand;
 
 extern Wall Walls[4];
 extern float playerRadius;    
@@ -37,7 +48,18 @@ extern GLuint cobleWall;
 
 #define WOOD_TEX_SIZE 256
 
+extern bool flyingMode;
+
 extern GLuint woodTextureID;
+
+extern bool animationRunning;
+extern bool texturesEnabled;
+extern float lightBrightness;
+extern GLfloat lightColor[4];
+
+extern const float GROUND_LEVEL;
+extern const float MAX_HEIGHT;
+
 
 extern float animateAngle;
 extern float xnew, ynew;

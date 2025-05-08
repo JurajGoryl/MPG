@@ -25,20 +25,20 @@ void OnInit(void)
     glCullFace(GL_BACK);
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_NORMALIZE); // Important for correct lighting!
+    glEnable(GL_NORMALIZE);
     
 
     glEnable(GL_LIGHTING);
     glEnable(GL_NORMALIZE);
     glShadeModel(GL_SMOOTH);
 
-    // Much brighter global ambient
+  
     GLfloat globalAmbient[] = {0.05f, 0.05f, 0.05f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
 
-    // Configure ALL light parameters in one place
-    GLfloat lampLightColor[] = {4.0f, 3.5f, 3.0f, 1.0f}; // Even brighter
+    
+    GLfloat lampLightColor[] = {4.0f, 3.5f, 3.0f, 1.0f};
     
     for (int i = 1; i <= 4; i++) {
         glLightfv(GL_LIGHT0+i, GL_DIFFUSE, lampLightColor);
@@ -49,8 +49,8 @@ void OnInit(void)
         glLightf(GL_LIGHT0+i, GL_SPOT_CUTOFF, 180.0f);
     }
 
-    // Load textures
-    if (!setTexture("textures/pole.bmp", &streetLamp.textureID, true) ||
+   
+    if (!setTexture("textures/coble.bmp", &streetLamp.textureID, true) ||
         !setTexture("textures/coble.bmp", &coble, true) ||
         !setTexture("textures/coble-wall.bmp", &cobleWall, true)) {
         std::cerr << "Failed to load textures!" << std::endl;
@@ -59,12 +59,7 @@ void OnInit(void)
 
     GenerateWoodTexture();
 
-    // Texture parameters
-    glBindTexture(GL_TEXTURE_2D, coble);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
-    // Initialize objects
+
     InitCollisionWalls();
     LoadLampModel("models/lampa.obj");
     SetupLampBuffers();

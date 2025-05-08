@@ -4,22 +4,29 @@
 
 To run this project use
 
-g++ xstude00.cpp src/display.cpp src/input.cpp src/init.cpp src/objects.cpp src/utils.cpp src/globals.cpp -o xstude00 -lGL -lGLU -lglut
+g++ main.cpp src/display.cpp src/input.cpp src/init.cpp src/objects.cpp src/utils.cpp src/globals.cpp -o main -lGL -lGLU -lglut
 
 ## Progress
 
-- [X] Modelování objektů (3b) - zatial 2 z 5, este nie je takze -3b
+- [ ] Modelování objektů (3b) - zatial 2 z 5, este nie je takze -3b
 - [X] Animace (1 b)
 - [X] Osvětlení (1b)
 - [X] Volný pohyb v horizontální rovině (1b) 
-- [ ] Menu (2 b)
-- [ ] Výpis textu (2 b)
+- [X] Menu (2 b)
+- [X] Výpis textu (2b)
 - [ ] 
 - [X] Blender model (1b) 
+- [X] Lietanie (2b)
+- [ ]
+- [X] Hod předmětu (2 b)
 - [ ] 
-- [ ] Tlačítka (2b) 
+- [X] Tlačítka (2b) 
 - [X] Průhlednost (1b) 
 - [X] Neprůchozí objekt (2b) - kazda stena je nepruchozi ze vsech stran
 - [X] Texturování (2b)
 - [ ]
 - [ ]
+
+## Summary
+
+19b

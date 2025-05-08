@@ -19,16 +19,21 @@ int main(int argc, char* argv[])
 	glutCreateWindow("Projekt 2025|Autor: Juraj Goryl");	
   
     glewInit();
-
-     glutDisplayFunc(OnDisplay);				
-     glutReshapeFunc(OnReshape);				
-     glutMouseFunc(OnMouseButton);			
-     glutMotionFunc(OnMouseMotion);			
-     glutSpecialFunc(OnSpecial);
-     glutKeyboardFunc(OnKeyboard);
-
-
+    glutDisplayFunc(OnDisplay);				
+    glutReshapeFunc(OnReshape);				
+    glutMouseFunc(OnMouseButton);			
+    glutMotionFunc(OnMouseMotion);			
+    glutSpecialFunc(OnSpecial);
+    glutKeyboardFunc(OnKeyboard);
 	OnInit();
+
+    glutCreateMenu(menuHandler);
+    glutAddMenuEntry("Reset Camera Position", 1);
+    glutAddMenuEntry("Toggle Animation", 2);
+    glutAddMenuEntry("Toggle Textures", 3);
+    glutAddMenuEntry("Toggle Light Brightness", 4);
+    glutAddMenuEntry("Exit", 5);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 	
 	glutMainLoop();
 

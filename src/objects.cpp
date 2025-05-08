@@ -30,10 +30,13 @@ void DrawPlane(int size)
     GLfloat floorDiffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
     glMaterialfv(GL_FRONT, GL_AMBIENT, floorAmbient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, floorDiffuse);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, coble);
-
+    if (texturesEnabled) {
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, coble); 
+ 
+    } else {
+        glDisable(GL_TEXTURE_2D);
+    }
     glBegin(GL_QUADS);
     glNormal3f(0, 1, 0); // Normála smeruje hore
     glTexCoord2f(0.0f, 0.0f); glVertex3i(-size, 0, size);
@@ -61,11 +64,18 @@ void DrawWall(float nx, float ny, float nz)
     glMaterialfv(GL_FRONT, GL_AMBIENT, wallAmbient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, wallDiffuse);
 
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, cobleWall);
+
+    if (texturesEnabled) {
+   
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, cobleWall);
+
+    } else {
+        glDisable(GL_TEXTURE_2D);
+    }
 
     glBegin(GL_QUADS);
-    glNormal3f(nx, ny, nz); // Use the correct normal!
+    glNormal3f(nx, ny, nz);
     glTexCoord2f(0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 0.0f);
     glTexCoord2f(4.0f, 0.0f); glVertex3f(200.0f, 0.0f, 0.0f);
     glTexCoord2f(4.0f, 2.0f); glVertex3f(200.0f, 50.0f, 0.0f);
@@ -75,37 +85,38 @@ void DrawWall(float nx, float ny, float nz)
     glDisable(GL_TEXTURE_2D);
 }
 
+
 void DrawAllWalls()
 {
-        // Back wall (along -Z)
+     
     glPushMatrix();
     glTranslatef(100.0f, 0.0f, -100.0f);
     glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
     glTranslatef(0, -15, 0);
-    DrawWall(0, 0, -1); // Normal faces +Z
+    DrawWall(0, 0, -1); 
     glPopMatrix();
 
-    // Front wall (along +Z)
+    
     glPushMatrix();
     glTranslatef(-100.0f, 0.0f, 100.0f);
     glTranslatef(0, -15, 0);
-    DrawWall(0, 0, -1); // Normal faces -Z
+    DrawWall(0, 0, -1);
     glPopMatrix();
 
-    // Right wall (along +X)
+
     glPushMatrix();
     glTranslatef(100.0f, 0.0f, 100.0f);
     glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
     glTranslatef(0, -15, 0);
-    DrawWall(0, 0, -1); // Normal faces -X
+    DrawWall(0, 0, -1);
     glPopMatrix();
 
-    // Left wall (along -X)
+   
     glPushMatrix();
     glTranslatef(-100.0f, 0.0f, -100.0f);
     glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
     glTranslatef(0, -15, 0);
-    DrawWall(0, 0, -1); // Normal faces +X
+    DrawWall(0, 0, -1); 
     glPopMatrix();
 }
 
@@ -118,7 +129,7 @@ void DrawWallCollisionBounds() {
         Wall wall = Walls[i];
         glBegin(GL_LINE_LOOP);
         
-        if (i == 0 || i == 1) { // Front/back walls
+        if (i == 0 || i == 1) { 
             float z = wall.point[2];
             glVertex3f(wall.point[0] - wall.width/2, wall.point[1], z);
             glVertex3f(wall.point[0] + wall.width/2, wall.point[1], z);
@@ -141,7 +152,7 @@ void DrawWallCollisionBounds() {
 void LoadLampModel(const char* objPath) {
     std::ifstream file(objPath);
     if (!file.is_open()) {
-        std::cerr << "Error: Could not open OBJ file: " << objPath << std::endl;
+        std::cerr << "Objek sa nenaloadil: " << objPath << std::endl;
         return;
     }
 
@@ -312,8 +323,10 @@ void DrawLamp(int lightNumber = -1) {
 }
 void DrawLamps() {
     GLfloat lampAmbient[]  = {0.0f, 0.0f, 0.0f, 1.0f};
-    GLfloat lampDiffuse[]  = {1.0f, 0.9f, 0.8f, 1.0f};
-    GLfloat lampSpecular[] = {1.0f, 0.9f, 0.8f, 1.0f};
+    //GLfloat lampDiffuse[]  = {1.0f, 0.9f, 0.8f, 1.0f};
+    //GLfloat lampSpecular[] = {1.0f, 0.9f, 0.8f, 1.0f};
+    GLfloat lampDiffuse[]  = {lightBrightness, lightBrightness, lightBrightness, 1.0f};
+    GLfloat lampSpecular[] = {lightBrightness, lightBrightness, lightBrightness, 1.0f}; 
     float bulbYOffset = 27.0f;
 
      // Lampa 1
@@ -328,7 +341,7 @@ void DrawLamps() {
      glLightfv(GL_LIGHT1, GL_SPECULAR, lampSpecular);
      glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.00f);
      glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.008f);
-     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0009f);
+     glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0005f);
      glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 180.0f);
      glEnable(GL_LIGHT1);
      DrawLamp(1);
@@ -347,7 +360,7 @@ void DrawLamps() {
     glLightfv(GL_LIGHT2, GL_SPECULAR, lampSpecular);
     glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, 1.00f);
     glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, 0.008f);
-    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.0009f);
+    glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, 0.0005f);
     glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, 180.0f);
     glEnable(GL_LIGHT2);
     DrawLamp(2);
@@ -365,7 +378,7 @@ void DrawLamps() {
     glLightfv(GL_LIGHT4, GL_SPECULAR, lampSpecular);
     glLightf(GL_LIGHT4, GL_CONSTANT_ATTENUATION, 1.00f);
     glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, 0.008f);
-    glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION, 0.0009f);
+    glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION, 0.0005f);
     glLightf(GL_LIGHT4, GL_SPOT_CUTOFF, 180.0f);
     glEnable(GL_LIGHT4);
     DrawLamp(4);
@@ -441,8 +454,14 @@ GLfloat boxNormals[] = {
 
 void Box() {
 
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, woodTextureID);
+    if (texturesEnabled) {
+       
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, woodTextureID);
+    } else {
+        glDisable(GL_TEXTURE_2D);
+    }
+    
 
     glBegin(GL_TRIANGLES);
     for(int i = 0; i < 36; i++) {  // 6 faces * 2 triangles * 3 vertices = 36
@@ -470,34 +489,58 @@ void GenerateWoodTexture()
 
     for (int y = 0; y < WOOD_TEX_SIZE; ++y) {
         for (int x = 0; x < WOOD_TEX_SIZE; ++x) {
-            float fx = (float)x / WOOD_TEX_SIZE;
-            float fy = (float)y / WOOD_TEX_SIZE;
-            float rings = 0.5f + 0.5f * sinf(20.0f * fx + 8.0f * sinf(4.0f * fy));
-            float grain = 0.2f * sinf(120.0f * fy + 50.0f * fx);
-    
-            float r = 110 + 60 * (rings + grain);
-            float g = 60 + 30 * (rings + grain);
-            float b = 20 + 15 * (rings + grain);
-    
-            data[y][x][0] = (unsigned char)fminf(255, fmaxf(0, r));
-            data[y][x][1] = (unsigned char)fminf(255, fmaxf(0, g));
-            data[y][x][2] = (unsigned char)fminf(255, fmaxf(0, b));
+            float fx = x / (float)WOOD_TEX_SIZE;
+            float fy = y / (float)WOOD_TEX_SIZE;
+            
+            // Hlavné prstence
+            float ring_pattern = 0.5f + 0.5f * sinf(20.0f * fx + 5.0f * sinf(3.0f * fy));
+            
+            // Vlákna (viac frekvencií)
+            float grain = 0.3f*sinf(100*fy + 60*fx) 
+                        + 0.15f*sinf(250*fy + 150*fx);
+            
+            // Škvrny
+            float knots = 0.0f;
+            if (sinf(15*fx)*sinf(15*fy) > 0.9f) {
+                knots = 0.3f * (sinf(40*fx)*sinf(40*fy));
+            }
+            
+            float wood = ring_pattern + grain + knots;
+            
+            // Nelineárna farebná transformácia
+            float r = 90 + 60 * sqrtf(fabsf(wood));
+            float g = 40 + 35 * wood;
+            float b = 15 + 10 * wood * wood;
+            
+            // Kontrast
+            wood = powf((wood + 1.0f)/2.0f, 1.5f);
+            
+            data[y][x][0] = (GLubyte)fmax(0, fmin(255, r));
+            data[y][x][1] = (GLubyte)fmax(0, fmin(255, g));
+            data[y][x][2] = (GLubyte)fmax(0, fmin(255, b));
         }
     }
 
     glGenTextures(1, &woodTextureID);
-    glBindTexture(GL_TEXTURE_2D, woodTextureID);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WOOD_TEX_SIZE, WOOD_TEX_SIZE, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    if (texturesEnabled) {
+
+        glBindTexture(GL_TEXTURE_2D, woodTextureID);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WOOD_TEX_SIZE, WOOD_TEX_SIZE, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+    } else {
+        glDisable(GL_TEXTURE_2D);
+    }
+    
+
 }
 void WindowObject() {
     // Disable backface culling (optional for full visibility)
     glDisable(GL_CULL_FACE);
 
-    // === Draw wooden frame (opaque) ===
     glDisable(GL_BLEND);        // No blending for opaque
     glDepthMask(GL_TRUE);       // Write to depth buffer
 
@@ -554,7 +597,6 @@ void WindowObject() {
         glEnd();
     }
 
-    // === Draw transparent glass pane ===
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthMask(GL_FALSE); // Prevent writing to depth buffer (so glass doesn't obscure frame)
@@ -611,10 +653,34 @@ void DrawWindowObject() {
 }
 
 void OnIdle() {
+    if (animationRunning) {
     animateAngle += 0.5f; // degrees per frame, adjust speed as needed
     if(animateAngle >= 360.0f) animateAngle -= 360.0f;
     glutPostRedisplay();
-}
+    }
 
+    if (thrownObject.active) {
+        if (!thrownObject.falling) {
+            // Simulácia letu
+            thrownObject.x += thrownObject.vx;
+            thrownObject.y += thrownObject.vy;
+            thrownObject.z += thrownObject.vz;
+    
+            // Kolízia so stenami
+            if (!CanMoveTo(thrownObject.x, thrownObject.y, thrownObject.z)) {
+                thrownObject.falling = true;
+                thrownObject.vx = 0;
+                thrownObject.vz = 0;
+            }
+        } else {
+            // Padanie dole
+            thrownObject.y -= 0.3f; // gravitácia
+            if (thrownObject.y <= -15.0f) {  // zem
+                thrownObject.y = -15.0f;
+                thrownObject.active = false;
+            }
+        }
+    }
+}
 
 

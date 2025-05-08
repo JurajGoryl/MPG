@@ -2,6 +2,8 @@
 #include <string>
 #include <GL/glut.h>
 
+ThrownObject thrownObject = {0, 0, 0, 0, 0, 0, false, false};
+
 GLuint coble;
 GLuint cobleWall;
 GLuint lampTexture;
@@ -18,6 +20,17 @@ float playerRadius;
 
 GLuint woodTextureID;
 
+std::string lastCommand = "Idle";
+
+bool flyingMode;
+
+bool animationRunning = true;
+bool texturesEnabled = true;
+float lightBrightness = 0.85;
+GLfloat lightColor[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+
+const float GROUND_LEVEL = -50.0f; 
+const float MAX_HEIGHT = 0.0f;
 
 float animateAngle;
 float xnew = 0, ynew = 0;
@@ -27,7 +40,6 @@ bool tocime = false;
 float uhel = 0;
 float tranz = 0, tranx = 0, trany = 0; 
 float radius = 150;
-
 float fov = 60.0;
 float nearPlane = 0.1;
 float farPlane = 150.0;
