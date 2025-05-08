@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Project
+
+odkazy.pdf
+.vscode
+main
