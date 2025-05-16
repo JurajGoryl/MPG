@@ -3,9 +3,9 @@
 ## Compilation
 
 To run this project use
-
+```Zsh
 g++ main.cpp src/display.cpp src/input.cpp src/init.cpp src/objects.cpp src/utils.cpp src/globals.cpp -o main -lGLEW -lGL -lGLU -lglut
-
+```
 ## Progress
 
 - [X] Animace (1b)
