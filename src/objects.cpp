@@ -166,28 +166,28 @@ void LoadLampModel(const char* objPath) {
         std::string type;
         iss >> type;
 
-        if (type == "v") {  // Vertex position
+        if (type == "v") { 
             GLfloat x, y, z;
             iss >> x >> y >> z;
             temp_vertices.push_back(x);
             temp_vertices.push_back(y);
             temp_vertices.push_back(z);
         } 
-        else if (type == "vt") {  // Texture coordinate
+        else if (type == "vt") {  
             GLfloat u, v;
             iss >> u >> v;
             temp_uvs.push_back(u);
             temp_uvs.push_back(v);
         }
-        else if (type == "vn") {  // Vertex normal
+        else if (type == "vn") { 
             GLfloat nx, ny, nz;
             iss >> nx >> ny >> nz;
             temp_normals.push_back(nx);
             temp_normals.push_back(ny);
             temp_normals.push_back(nz);
         }
-        else if (type == "f") {  // Face definition
-            for (int i = 0; i < 3; i++) {  // Assuming triangles
+        else if (type == "f") { 
+            for (int i = 0; i < 3; i++) { 
                 std::string face;
                 iss >> face;
                 
@@ -198,31 +198,31 @@ void LoadLampModel(const char* objPath) {
                 fiss >> vIdx;
                 if (fiss >> tIdx) {
                     if (fiss >> nIdx) {
-                        // All three indices present
+
                     } else {
-                        // Only vertex and texture indices
+                    
                     }
                 }
                 
-                // Adjust indices (OBJ uses 1-based indexing)
+                
                 vIdx--;
                 if (tIdx > 0) tIdx--;
                 if (nIdx > 0) nIdx--;
                 
-                // Push vertex
+            
                 if (vIdx >= 0 && vIdx*3+2 < temp_vertices.size()) {
                     streetLamp.vertices.push_back(temp_vertices[vIdx*3]);
                     streetLamp.vertices.push_back(temp_vertices[vIdx*3+1]);
                     streetLamp.vertices.push_back(temp_vertices[vIdx*3+2]);
                 }
                 
-                // Push texture coordinate if available
+        
                 if (tIdx >= 0 && tIdx*2+1 < temp_uvs.size()) {
                     streetLamp.uvs.push_back(temp_uvs[tIdx*2]);
                     streetLamp.uvs.push_back(temp_uvs[tIdx*2+1]);
                 }
                 
-                // Push normal if available
+         
                 if (nIdx >= 0 && nIdx*3+2 < temp_normals.size()) {
                     streetLamp.normals.push_back(temp_normals[nIdx*3]);
                     streetLamp.normals.push_back(temp_normals[nIdx*3+1]);
@@ -234,12 +234,12 @@ void LoadLampModel(const char* objPath) {
     
     file.close();
     
-    // If no UVs were loaded, generate simple ones
+
     if (streetLamp.uvs.empty()) {
         std::cout << "Generating simple UV coordinates" << std::endl;
         for (size_t i = 0; i < streetLamp.vertices.size(); i += 3) {
-            // Simple planar projection
-            float u = streetLamp.vertices[i] / 10.0f;  // Adjust scale as needed
+ 
+            float u = streetLamp.vertices[i] / 10.0f; 
             float v = streetLamp.vertices[i+1] / 10.0f;
             streetLamp.uvs.push_back(u);
             streetLamp.uvs.push_back(v);
@@ -252,11 +252,11 @@ void LoadLampModel(const char* objPath) {
 
 void SetupLampBuffers() {
     glGenVertexArrays(1, &streetLamp.VAO);
-    glGenBuffers(3, streetLamp.VBO);  // 0: vertices, 1: normals, 2: UVs
+    glGenBuffers(3, streetLamp.VBO);
     
     glBindVertexArray(streetLamp.VAO);
     
-    // Vertices
+
     glBindBuffer(GL_ARRAY_BUFFER, streetLamp.VBO[0]);
     glBufferData(GL_ARRAY_BUFFER, 
                 streetLamp.vertices.size() * sizeof(GLfloat),
@@ -264,8 +264,7 @@ void SetupLampBuffers() {
                 GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
     glEnableVertexAttribArray(0);
-    
-    // Normals (if available)
+
     if (!streetLamp.normals.empty()) {
         glBindBuffer(GL_ARRAY_BUFFER, streetLamp.VBO[1]);
         glBufferData(GL_ARRAY_BUFFER,
@@ -276,7 +275,7 @@ void SetupLampBuffers() {
         glEnableVertexAttribArray(1);
     }
     
-    // UVs (if available)
+
     if (!streetLamp.uvs.empty()) {
         glBindBuffer(GL_ARRAY_BUFFER, streetLamp.VBO[2]);
         glBufferData(GL_ARRAY_BUFFER,
@@ -290,7 +289,7 @@ void SetupLampBuffers() {
     glBindVertexArray(0);
 }
 void DrawLamp(int lightNumber = -1) {
-    // Metal material properties
+
     GLfloat matAmbient[] = {0.3f, 0.3f, 0.3f, 1.0f};
     GLfloat matDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
     GLfloat matSpecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -301,18 +300,18 @@ void DrawLamp(int lightNumber = -1) {
     glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
     glMaterialf(GL_FRONT, GL_SHININESS, matShininess);
 
-    // Draw lamp post
+
     glBindVertexArray(streetLamp.VAO);
     glDrawArrays(GL_TRIANGLES, 0, streetLamp.vertices.size() / 3);
     
-    // Bulb properties
+
     if(lightNumber >= 0) {
-        GLfloat emitColor[] = {1.0f, 0.9f, 0.8f, 1.0f}; // Matches light color
+        GLfloat emitColor[] = {1.0f, 0.9f, 0.8f, 1.0f}; 
         glMaterialfv(GL_FRONT, GL_EMISSION, emitColor);
         
         glPushMatrix();
-        glTranslatef(2, -1, 0); // Adjust to bulb position in your model
-        glutSolidSphere(3.0, 16, 16); // High-quality bulb
+        glTranslatef(2, -1, 0);
+        glutSolidSphere(3.0, 16, 16);
         glPopMatrix();
         
         GLfloat noEmit[] = {0,0,0,1};
@@ -479,7 +478,7 @@ void DrawBox() {
     glPushMatrix();
     glScalef(0.5f, 0.5f, 0.5f);
     glTranslatef(75, -15, -75); 
-    Box(); // Your existing box rendering
+    Box(); 
     glPopMatrix();
 }
 
@@ -633,12 +632,12 @@ void AnimateObject() {
 
     glPushMatrix();
 
-    // Move to window center, rotate, move back
+   
     glTranslatef(1.0f, 1.0f, -0.1f);      // Move origin to window center
     glRotatef(animateAngle, 0, 1, 0);      // Rotate around Y axis
     glTranslatef(-1.0f, -1.0f, 0.1f);     // Move origin back
 
-    // Now draw the window at (0,0,0) as usual
+
     WindowObject();
 
     glPopMatrix();
@@ -655,7 +654,7 @@ void DrawWindowObject() {
 
 void OnIdle() {
     if (animationRunning) {
-    animateAngle += 0.5f; // degrees per frame, adjust speed as needed
+    animateAngle += 0.5f;
     if(animateAngle >= 360.0f) animateAngle -= 360.0f;
     glutPostRedisplay();
     }
